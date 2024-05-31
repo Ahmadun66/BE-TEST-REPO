@@ -215,4 +215,3 @@ Error Responses:
 401 Unauthorized: If the token is missing or invalid.
 
 ---
-
