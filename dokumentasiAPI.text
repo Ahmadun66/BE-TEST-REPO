@@ -1,0 +1,218 @@
+Register User
+URL: /register
+
+Method: POST
+
+Description: Registers a new user.
+
+Request Body: 
+
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "jenisKelamin": "string"
+}
+
+Response:
+
+200 OK: Returns a JWT token.
+400 Bad Request: If the user already exists.
+500 Internal Server Error: If there's a server error. 
+
+
+----
+
+Login User
+URL: /login
+
+Method: POST
+
+Description: Logs in a user.
+
+Request Body:
+
+{
+  "email": "string",
+  "password": "string"
+}
+
+Response:
+
+200 OK: Returns a JWT token.
+400 Bad Request: If the credentials are invalid.
+500 Internal Server Error: If there's a server error.
+
+--
+
+Get User Profile
+URL: /profile
+
+Method: GET
+
+Description: Retrieves the profile of the authenticated user.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Response:
+
+200 OK: Returns the user profile.
+401 Unauthorized: If the token is missing or invalid.
+500 Internal Server Error: If there's a server error.
+
+-----
+
+
+Product Routes
+Get All Products
+URL: /listproduct
+
+Method: GET
+
+Description: Retrieves a list of all products.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Response:
+
+200 OK: Returns an array of products.
+500 Internal Server Error: If there's a server error.
+
+--- 
+
+Add Product
+URL: /addproduct
+
+Method: POST
+
+Description: Adds a new product.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Request Body:
+
+{
+  "nameProduct": "string",
+  "price": "number",
+  "category": "string",
+  "description": "string"
+}
+
+Response:
+
+200 OK: Returns the newly created product.
+500 Internal Server Error: If there's a server error.
+
+---
+
+Get Product by ID
+URL: /oneproduct/:id
+
+Method: GET
+
+Description: Retrieves a product by its ID.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Response:
+
+200 OK: Returns the product.
+404 Not Found: If the product is not found.
+500 Internal Server Error: If there's a server error.
+
+---
+
+Update Product
+URL: /updateproduct/:id
+
+Method: PUT
+
+Description: Updates a product by its ID.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Request Body:
+
+{
+  "nameProduct": "string",
+  "price": "number",
+  "category": "string",
+  "description": "string"
+}
+
+Response:
+
+200 OK: Returns the updated product.
+404 Not Found: If the product is not found.
+500 Internal Server Error: If there's a server error.
+
+---
+
+Delete Product
+URL: /deleteproduct/:id
+
+Method: DELETE
+
+Description: Deletes a product by its ID.
+
+Headers:
+
+{
+  "x-auth-token": "string"
+}
+
+Response:
+
+200 OK: Returns a success message.
+404 Not Found: If the product is not found.
+500 Internal Server Error: If there's a server error.
+
+---
+
+Middleware
+Authentication Middleware
+Description: Middleware to verify JWT tokens.
+
+Usage: Attach authMiddleware to any route that requires authentication.
+
+function authMiddleware(req, res, next) {
+  const token = req.header('x-auth-token');
+  if (!token) {
+    return res.status(401).json({ msg: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'secret');
+    req.user = decoded.user;
+    next();
+  } catch (err) {
+    res.status(401).json({ msg: 'Token is not valid' });
+  }
+}
+
+Error Responses:
+
+401 Unauthorized: If the token is missing or invalid.
+
+---
+
